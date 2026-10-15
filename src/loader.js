@@ -26,6 +26,7 @@ const GAME_CLICKABLE_ASSETS = [ // Mark bounding box for clickable assets
     { name: "news_stand", png: "sprites/CRT/NewsStand.png", bbox: { x: 607, y: 241, w: 160, h: 144 },
         url: "https://ko-fi.com/solarsproutshop/posts" },
     { name: "robot", png: "sprites/CRT/Robot.png", bbox: { x: 337, y: 234, w: 74, h: 128 },
+        url: "https://github.com/solarsproutcode",
         frames: [ // hover animation frames
             "sprites/Robot/Robot1.png", "sprites/Robot/Robot2.png", "sprites/Robot/Robot3.png", "sprites/Robot/Robot4.png",
             "sprites/Robot/Robot5.png", "sprites/Robot/Robot6.png", "sprites/Robot/Robot7.png", "sprites/Robot/Robot8.png",
