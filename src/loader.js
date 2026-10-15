@@ -42,7 +42,7 @@ export function loadAssets(k) {
         const { screenPos, screenSize } = addCRT(k);
         addGameAssets(k, screenPos, screenSize);
         addCRTOverlay(k);
-        k.play("BackgroundMusic", { volume: 0.5, loop: true });
+        addMusic(k);
     });
 }
 
@@ -104,6 +104,18 @@ function addGameAssets(k, screenPos, screenSize) {
         const overLink = links.some((obj) => obj.isHovering());
         k.setCursor(overLink ? "pointer" : "default");
     });
+}
+
+// Browsers block sound until the visitor interacts, so start the music on the first click or key press
+function addMusic(k) {
+    const music = k.play("BackgroundMusic", { volume: 0.5, loop: true, paused: true });
+    const startMusic = () => {
+        music.play();
+        clickEvent.cancel(); // only start once
+        keyEvent.cancel();
+    };
+    const clickEvent = k.onMousePress(startMusic);
+    const keyEvent = k.onKeyPress(startMusic);
 }
 
 function addCRT(k) {
