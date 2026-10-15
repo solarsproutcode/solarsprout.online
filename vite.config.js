@@ -9,13 +9,6 @@ export default defineConfig({
     build: {
         // disable this for low bundle sizes
         sourcemap: true,
-        rollupOptions: {
-            output: {
-                manualChunks: {
-                    kaplay: ["kaplay"],
-                },
-            },
-        },
     },
     plugins: [
     ],
