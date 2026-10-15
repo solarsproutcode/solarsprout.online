@@ -1,3 +1,5 @@
+import { addCRTOverlay } from "./crt_overlay.js";
+
 // Constants for defining assets
 const GAME_STATIC_ASSETS = [
     { name: "game_bg", png: "backgrounds/CRT/Background.png" },
@@ -29,7 +31,7 @@ export function loadAssets(k) {
     k.onLoad(() => {
         const { screenPos, screenSize } = addCRT(k);
         addGameAssets(k, screenPos, screenSize);
-        
+        addCRTOverlay(k);
         k.play("BackgroundMusic", { volume: 0.5, loop: true });
     });
 }
