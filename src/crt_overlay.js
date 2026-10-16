@@ -1,12 +1,18 @@
 import { createCrtScreen } from "@glowbox/crt";
 
 export function addCRTOverlay(k) {
+    // Phones and tablets have less graphics memory, so use a lighter version of the effect there
+    const isTouchOnly = window.matchMedia("(hover: none)").matches;
     // glowbox crt effects
     const crt = createCrtScreen(k.canvas, {
         curvature: 0.35,
         scanlines: 0.3,
         vignette: 0.3,
         events: false,
+        ...(isTouchOnly && {
+            pixelRatio: 1, // render at the game's resolution instead of 2x
+            persistence: 0, // no ghosting trail, so no extra frames kept in memory
+        }),
     });
     crt.canvas.style.pointerEvents = "none"; // clicks pass through
     crt.canvas.style.position = "fixed"; // override default position
