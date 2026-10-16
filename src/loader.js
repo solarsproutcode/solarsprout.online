@@ -1,5 +1,11 @@
 import { addCRTOverlay } from "./crt_overlay.js";
 
+// Images are cropped to their content; "at" is where the crop's top-left corner sits in the
+// full 1152×648 scene. Assets without "at" fill the whole scene and start at 0, 0.
+function sceneOffset(k, asset) {
+    return k.vec2(asset.at?.x ?? 0, asset.at?.y ?? 0);
+}
+
 // List of hover animation frames
 function hoverFrames(folder, prefix, count) {
     return Array.from({ length: count }, (_, i) => `sprites/${folder}/${prefix}${i + 1}.png`);
@@ -9,44 +15,44 @@ function hoverFrames(folder, prefix, count) {
 const GAME_STATIC_ASSETS = [
     { name: "game_bg", png: "backgrounds/CRT/Background.png" },
     { name: "clouds", png: "backgrounds/CRT/Clouds.png", scrollSpeed: 15 }, // drifts right, art pixels per second
-    { name: "grass", png: "backgrounds/CRT/Grass.png" },
-    { name: "grass2", png: "backgrounds/CRT/Grass2.png" },
-    { name: "large_rock", png: "backgrounds/CRT/LargeRock.png" },
-    { name: "news_ground", png: "backgrounds/CRT/NewsGround.png" },
-    { name: "fence", png: "backgrounds/CRT/Fence.png" },
-    { name: "sign", png: "backgrounds/CRT/Sign.png" }
+    { name: "grass", png: "backgrounds/CRT/Grass.png", at: { x: 177, y: 468 } },
+    { name: "grass2", png: "backgrounds/CRT/Grass2.png", at: { x: 564, y: 526 } },
+    { name: "large_rock", png: "backgrounds/CRT/LargeRock.png", at: { x: 823, y: 24 } },
+    { name: "news_ground", png: "backgrounds/CRT/NewsGround.png", at: { x: 533, y: 276 } },
+    { name: "fence", png: "backgrounds/CRT/Fence.png", at: { x: 191, y: 76 } },
+    { name: "sign", png: "backgrounds/CRT/Sign.png", at: { x: 245, y: 407 } }
 ];
 const GAME_CLICKABLE_ASSETS = [ // Mark bounding box for clickable assets
-    { name: "arcade", png: "sprites/CRT/Arcade.png", bbox: { x: 601, y: 9, w: 319, h: 187 },
+    { name: "arcade", png: "sprites/CRT/Arcade.png", at: { x: 602, y: 9 }, bbox: { x: 601, y: 9, w: 319, h: 187 },
         url: "https://solarsprout.itch.io/",
         frames: hoverFrames("Arcade", "Arcade", 5),
         hoverSound: "sounds/Arcade.wav", hoverSoundLoop: true, hoverVolume: 0.2 },
-    { name: "art_gallery", png: "sprites/CRT/ArtGallery.png", bbox: { x: 0, y: 0, w: 275, h: 355 },
+    { name: "art_gallery", png: "sprites/CRT/ArtGallery.png", at: { x: 0, y: 0 }, bbox: { x: 0, y: 0, w: 275, h: 355 },
         url: "https://ko-fi.com/solarsproutshop/shop",
         frames: hoverFrames("ArtGallery", "ArtGallery", 3), loop: false,
         hoverSound: "sounds/Door Creak.wav" },
-    { name: "dj", png: "sprites/CRT/DJ.png", bbox: { x: 904, y: 0, w: 248, h: 342 },
+    { name: "dj", png: "sprites/CRT/DJ.png", at: { x: 904, y: 0 }, bbox: { x: 904, y: 0, w: 248, h: 342 },
         url: "https://open.spotify.com/artist/6LskQdnSNWP1q6QyxlvRaL?si=kV8kSIVoTMKmIfX7Zwt1DQ",
         frames: hoverFrames("DJ", "DJ", 5),
         hoverSound: "sounds/Cello.wav", hoverSoundLoop: true, hoverVolume: 0.35 },
-    { name: "fountain", png: "sprites/CRT/Fountain.png", bbox: { x: 0, y: 556, w: 70, h: 92 } },
-    { name: "mailbox", png: "sprites/CRT/Mailbox2.png", bbox: { x: 986, y: 414, w: 85, h: 99 },
+    { name: "fountain", png: "sprites/CRT/Fountain.png", at: { x: 0, y: 557 }, bbox: { x: 0, y: 556, w: 70, h: 92 } },
+    { name: "mailbox", png: "sprites/CRT/Mailbox2.png", at: { x: 987, y: 400 }, bbox: { x: 986, y: 414, w: 85, h: 99 },
         url: "https://discord.gg/C78YcT5JN",
         frames: hoverFrames("Mailbox", "Mailbox", 5), loop: false,
         hoverSound: "sounds/Whistle.wav", hoverVolume: 0.7 },
-    { name: "movie_theater", png: "sprites/CRT/MovieTheater.png", bbox: { x: 241, y: 0, w: 346, h: 223 },
+    { name: "movie_theater", png: "sprites/CRT/MovieTheater.png", at: { x: 242, y: 0 }, bbox: { x: 241, y: 0, w: 346, h: 223 },
         url: "https://www.youtube.com/@SolarSproutFilms",
         frames: hoverFrames("MovieTheater", "MovieTheater", 6), loop: false,
         hoverSound: "sounds/Camera.wav" },
-    { name: "news_stand", png: "sprites/CRT/NewsStand.png", bbox: { x: 607, y: 241, w: 160, h: 144 },
+    { name: "news_stand", png: "sprites/CRT/NewsStand.png", at: { x: 607, y: 242 }, bbox: { x: 607, y: 241, w: 160, h: 144 },
         url: "https://ko-fi.com/solarsproutshop/posts",
         hoverScale: 1.08, // grows 8% on hover
         hoverSound: "sounds/Typewriter.wav", hoverSoundLoop: true, hoverVolume: 0.6 },
-    { name: "robot", png: "sprites/CRT/Robot.png", bbox: { x: 337, y: 234, w: 74, h: 128 },
+    { name: "robot", png: "sprites/CRT/Robot.png", at: { x: 294, y: 234 }, bbox: { x: 337, y: 234, w: 74, h: 128 },
         url: "https://github.com/solarsproutcode",
         frames: hoverFrames("Robot", "Robot", 8),
         hoverSound: "sounds/Skateboard.wav", hoverSoundLoop: true, hoverVolume: 2.5 },
-    { name: "tree", png: "sprites/CRT/Tree.png", bbox: { x: 907, y: 9, w: 65, h: 104 } },
+    { name: "tree", png: "sprites/CRT/Tree.png", at: { x: 908, y: 9 }, bbox: { x: 907, y: 9, w: 65, h: 104 } },
 ]
 
 // Load methods
@@ -94,24 +100,41 @@ function addGameAssets(k, screenPos, screenSize) {
             continue;
         }
         k.add([
-            k.pos(gamePos),
+            k.pos(gamePos.add(sceneOffset(k, asset).scale(scale))),
             k.sprite(asset.name),
             k.scale(scale),
             k.layer("Game"),
         ]);
     }
     const links = []; // objects that open a link when clicked
+    // Phones and tablets can't hover, so there the first tap previews (animation + sound)
+    // and a second tap on the same object opens its link
+    const isTouchOnly = window.matchMedia("(hover: none)").matches;
+    let selected = null; // the object tapped once, waiting for a second tap
     for (const asset of GAME_CLICKABLE_ASSETS) {
-        const rect = new k.Rect(k.vec2(asset.bbox.x, asset.bbox.y), asset.bbox.w, asset.bbox.h);
+        // bbox is in scene pixels; the sprite is cropped, so measure the click area from the crop's corner
+        const offset = sceneOffset(k, asset);
+        const basePos = gamePos.add(offset.scale(scale));
+        const rect = new k.Rect(k.vec2(asset.bbox.x, asset.bbox.y).sub(offset), asset.bbox.w, asset.bbox.h);
         const obj = k.add([
-            k.pos(gamePos),
+            k.pos(basePos),
             k.sprite(asset.name),
             k.scale(scale),
             k.area({ shape: rect }),
             k.layer("Game"),
         ]);
         if (asset.url) {
-            obj.onClick(() => window.open(asset.url, "_blank")); // open link in a new tab
+            obj.onClick(() => {
+                if (!isTouchOnly || selected === obj) {
+                    window.open(asset.url, "_blank"); // open link in a new tab
+                } else {
+                    selected = obj; // first tap on touch: just preview
+                }
+            });
+            // Tapping anywhere else ends the hover, so the next tap here is a first tap again
+            obj.onHoverEnd(() => {
+                if (selected === obj) selected = null;
+            });
             links.push(obj);
         }
         if (asset.frames) {
@@ -122,17 +145,17 @@ function addGameAssets(k, screenPos, screenSize) {
             });
         }
         if (asset.hoverScale) {
-            // The sprite is a full-scene image scaled from its top-left corner, so shift it
-            // while scaling to keep the center of its bbox in the same place on screen
-            const center = k.vec2(asset.bbox.x + asset.bbox.w / 2, asset.bbox.y + asset.bbox.h / 2);
+            // Sprites scale from their top-left corner, so shift it while scaling
+            // to keep the center of its bbox in the same place on screen
+            const center = k.vec2(asset.bbox.x + asset.bbox.w / 2, asset.bbox.y + asset.bbox.h / 2).sub(offset);
             const bigScale = scale * asset.hoverScale;
             obj.onHover(() => {
                 obj.scaleTo(bigScale);
-                obj.pos = gamePos.sub(center.scale(bigScale - scale));
+                obj.pos = basePos.sub(center.scale(bigScale - scale));
             });
             obj.onHoverEnd(() => {
                 obj.scaleTo(scale);
-                obj.pos = gamePos;
+                obj.pos = basePos;
             });
         }
         if (asset.hoverSound) {
