@@ -199,13 +199,14 @@ function addScrollingAsset(k, asset, gamePos, scale) {
 // Browsers block sound until the visitor interacts, so start the music on the first click or key press
 function addMusic(k) {
     const music = k.play("BackgroundMusic", { volume: 0.5, loop: true, paused: true });
+    // Use the browser's own events, not KAPLAY's: KAPLAY runs its input handlers a frame later,
+    // and phones (iPhone Safari especially) only allow audio to start during the tap itself
+    const events = ["mousedown", "touchend", "keydown"];
     const startMusic = () => {
         music.play();
-        clickEvent.cancel(); // only start once
-        keyEvent.cancel();
+        events.forEach((e) => window.removeEventListener(e, startMusic)); // only start once
     };
-    const clickEvent = k.onMousePress(startMusic);
-    const keyEvent = k.onKeyPress(startMusic);
+    events.forEach((e) => window.addEventListener(e, startMusic));
 }
 
 function addCRT(k) {
